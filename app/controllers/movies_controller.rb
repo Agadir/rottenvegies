@@ -7,7 +7,8 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
+    #direction = params[:sort] && params[:direction] == "asc" ? "desc" : "asc" 
+    @movies = Movie.order(params[:sort])
   end
 
   def new
@@ -34,6 +35,7 @@ class MoviesController < ApplicationController
   def destroy
     @movie = Movie.find(params[:id])
     @movie.destroy
+
     flash[:notice] = "Movie '#{@movie.title}' deleted."
     redirect_to movies_path
   end
