@@ -7,9 +7,15 @@ class MoviesController < ApplicationController
   end
 
   def index
-    #direction = params[:sort] && params[:direction] == "asc" ? "desc" : "asc" 
-    @movies = Movie.order(params[:sort])
-  end
+    @all_ratings = Movie.all_ratings   
+    @selected_ratings = params[:ratings] || session[:ratings] || {} 
+     
+    if @selected_ratings == {}
+      @selected_ratings = Hash[@all_ratings.map {|rating| [rating, rating]}] 
+    end 
+    
+    @movies = Movie.order(params[:sort]).find_all_by_rating(@selected_ratings.keys) 
+  end 
 
   def new
     # default: render 'new' template
